@@ -42,4 +42,6 @@
             - Deletes a file by file ID and version.
 
 # Instructions
-1. 
+1. Open `Agorus.sln`.
+2. Open the Package Manager Console and run `Update-Database`.
+3. Run the `Agorus.Web.Api` project.
