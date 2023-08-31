@@ -67,6 +67,7 @@ namespace Agorus.Data.Repositories
                 {
                     FileId = latestVersion.FileId,
                     Version = latestVersion.Version + 1,
+                    FileName = file.FileName,
                     Content = file.Content,
                     ContentType = file.ContentType,
                 };

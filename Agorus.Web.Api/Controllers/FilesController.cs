@@ -37,8 +37,8 @@ namespace Agorus.Web.Api.Controllers
             return await _fileRepository.GetAsync(id, cancellationToken) ?? (ActionResult<File>)NotFound();
         }
 
-        [HttpGet("{fileId}")]
-        public async Task<ActionResult<File>> Get([FromRoute] Guid fileId, [FromQuery] int version, CancellationToken cancellationToken)
+        [HttpGet("{fileId}/version/{version}")]
+        public async Task<ActionResult<File>> Get([FromRoute] Guid fileId, [FromRoute] int version, CancellationToken cancellationToken)
         {
             return await _fileRepository.GetAsync(fileId, version, cancellationToken) ?? (ActionResult<File>)NotFound();
         }
@@ -52,6 +52,8 @@ namespace Agorus.Web.Api.Controllers
             var newFile = new File
             {
                 Content = memoryStream.ToArray(),
+                FileName = file.FileName,
+                ContentType = file.ContentType,
             };
             var createdFile = await _fileRepository.AddAsync(newFile, cancellationToken);
 
@@ -70,6 +72,8 @@ namespace Agorus.Web.Api.Controllers
             {
                 FileId = fileId,
                 Content = memoryStream.ToArray(),
+                FileName = file.FileName,
+                ContentType = file.ContentType,
             };
             var updatedFile = await _fileRepository.UpdateAsync(dbFile, cancellationToken);
             return updatedFile == null
