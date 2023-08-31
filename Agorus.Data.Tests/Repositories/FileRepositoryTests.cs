@@ -15,7 +15,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAllAsync(default);
+            var result = await repo.GetAllAsync(Guid.Empty, default);
 
             // Assert
             result.Should().BeEmpty();
@@ -35,7 +35,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAllAsync(default);
+            var result = await repo.GetAllAsync(Guid.Empty, default);
 
             // Assert
             result.Should().BeEquivalentTo(files);
@@ -79,7 +79,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAsync(99, default);
+            var result = await repo.GetByIdAsync(99, default);
 
             // Assert
             result.Should().BeNull();
@@ -100,7 +100,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAsync(id, default);
+            var result = await repo.GetByIdAsync(id, default);
 
             // Assert
             result.Should().Be(files[0]);
@@ -145,7 +145,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAsync(fileId, version, default);
+            var result = await repo.GetByFileIdAndVersionAsync(fileId, version, default);
 
             // Assert
             result.Should().BeNull();
@@ -168,7 +168,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.GetAsync(fileId, version, default);
+            var result = await repo.GetByFileIdAndVersionAsync(fileId, version, default);
 
             // Assert
             result.Should().Be(files[1]);
@@ -260,7 +260,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.DeleteAsync(1, default);
+            var result = await repo.DeleteByIdAsync(1, default);
 
             // Assert
             result.Should().BeFalse();
@@ -275,7 +275,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.DeleteAsync(1, default);
+            var result = await repo.DeleteByIdAsync(1, default);
 
             // Assert
             result.Should().BeTrue();
@@ -294,7 +294,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.DeleteAsync(file.FileId, 2, default);
+            var result = await repo.DeleteByFileIdAndVersionAsync(file.FileId, 2, default);
 
             // Assert
             result.Should().BeFalse();
@@ -313,7 +313,7 @@ namespace Agorus.Data.Tests.Repositories
             var repo = new FileRepository(context);
 
             // Act
-            var result = await repo.DeleteAsync(file.FileId, file.Version, default);
+            var result = await repo.DeleteByFileIdAndVersionAsync(file.FileId, file.Version, default);
 
             // Assert
             result.Should().BeTrue();

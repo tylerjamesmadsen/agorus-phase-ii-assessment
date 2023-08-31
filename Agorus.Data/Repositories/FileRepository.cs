@@ -12,21 +12,28 @@ namespace Agorus.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<File>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            return await _context.Files.ToListAsync(cancellationToken);
-        }
-
         public async Task<IEnumerable<File>> GetAllAsync(Guid fileId, CancellationToken cancellationToken)
         {
-            return await _context.Files.Where(f => f.FileId == fileId).ToListAsync(cancellationToken);
+            var query = _context.Files.AsQueryable();
+            if (fileId != default)
+            {
+                query = query.Where(f => f.FileId == fileId);
+            }
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<File?> GetAsync(int id, CancellationToken cancellationToken)
+        public async Task<File?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _context.Files
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<File?> GetByFileIdAndVersionAsync(Guid fileId, int version, CancellationToken cancellationToken)
+        {
+            return await _context.Files
+                .Where(f => f.FileId == fileId && f.Version == version)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         }
 
         public async Task<File?> GetLatestVersionAsync(Guid fileId, CancellationToken cancellationToken)
@@ -35,13 +42,6 @@ namespace Agorus.Data.Repositories
                 .Where(f => f.FileId == fileId)
                 .OrderByDescending(f => f.Version)
                 .FirstOrDefaultAsync(cancellationToken);
-        }
-
-        public async Task<File?> GetAsync(Guid fileId, int version, CancellationToken cancellationToken)
-        {
-            return await _context.Files
-                .Where(f => f.FileId == fileId && f.Version == version)
-                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         }
 
         public async Task<File?> AddAsync(File file, CancellationToken cancellationToken)
@@ -82,9 +82,9 @@ namespace Agorus.Data.Repositories
             return null;
         }
 
-        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var file = await GetAsync(id, cancellationToken);
+            var file = await GetByIdAsync(id, cancellationToken);
             if (file != null)
             {
                 _context.Files.Remove(file);
@@ -94,9 +94,9 @@ namespace Agorus.Data.Repositories
             return false;
         }
 
-        public async Task<bool> DeleteAsync(Guid fileId, int version, CancellationToken cancellationToken)
+        public async Task<bool> DeleteByFileIdAndVersionAsync(Guid fileId, int version, CancellationToken cancellationToken)
         {
-            var file = await GetAsync(fileId, version, cancellationToken);
+            var file = await GetByFileIdAndVersionAsync(fileId, version, cancellationToken);
             if (file != null)
             {
                 _context.Files.Remove(file);

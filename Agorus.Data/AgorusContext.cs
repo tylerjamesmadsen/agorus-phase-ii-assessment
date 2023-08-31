@@ -2,7 +2,6 @@
 
 namespace Agorus.Data
 {
-
     public class AgorusContext : DbContext
     {
         public DbSet<Models.File> Files { get; set; }
